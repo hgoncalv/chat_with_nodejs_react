@@ -1,0 +1,100 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.IO Chat</title>
+    <link rel="stylesheet" href="/public/styles.css" />
+  </head>
+  <body>
+    <div>
+      <label for="usernameInput">username:</label>
+      <input id="usernameInput" type="text" />
+      <button onclick="setUsername()">set</button>
+    </div>
+    <div>
+      <label for="roomInput">Room:</label>
+      <input id="roomInput" type="text" value="<!--#room_placeholder#-->" />
+      <button onclick="joinRoom()">Join Room</button>
+      <button onclick="leaveRoom()">Leave Room</button>
+    </div>
+
+    <div class="chat-container">
+      <ul id="messages" class="message-list"></ul>
+      <form id="form" class="message-form" action="">
+        <input
+          id="input"
+          class="message-input"
+          autocomplete="off"
+          placeholder="Type a message..."
+        />
+        <button class="send-button">Send</button>
+      </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+
+      var form = document.getElementById("form");
+      var input = document.getElementById("input");
+      var roomInput = document.getElementById("roomInput");
+      if (roomInput.value === "<!--#room_placeholder#-->") {
+        roomInput.value = "";
+      }
+      var usernameInput = document.getElementById("usernameInput");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", input.value, roomInput.value);
+          input.value = "";
+        }
+      });
+
+      socket.on("chat message", function (data) {
+        var item = document.createElement("li");
+        item.textContent = `${data.user} : ${data.msg}`;
+
+        // Add appropriate classes based on whether the message is sent or received
+        if (document.getElementById("usernameInput").value === data.user) {
+          item.classList.add("sent");
+        } else {
+          item.classList.add("received");
+        }
+
+        // Add classes for common styles
+        item.classList.add("message-bubble", "message-item");
+
+        document.getElementById("messages").appendChild(item);
+      });
+
+      function joinRoom() {
+        var room = roomInput.value;
+        socket.emit("join room", room);
+        console.log("Joined room:", room);
+      }
+
+      function setUsername() {
+        var nickname = document.getElementById("usernameInput").value;
+        if (nickname.trim() === "") {
+          alert("Please enter a nickname");
+          return;
+        }
+        socket.emit("set username", nickname);
+      }
+
+      function leaveRoom() {
+        socket.emit("leave room");
+        console.log("Left current room");
+      }
+      function initializeApp() {
+        if (roomInput && roomInput.value && roomInput.value.trim() !== "") {
+          joinRoom(roomInput);
+        }
+      }
+      initializeApp();
+    </script>
+  </body>
+</html>

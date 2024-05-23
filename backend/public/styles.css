@@ -1,0 +1,73 @@
+/* Styles for chat interface */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.chat-container {
+  max-width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Start chat at the bottom */
+  padding: 20px;
+}
+
+.message-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto; /* Enable scrolling for messages */
+}
+
+.message-item {
+  margin-bottom: 10px;
+}
+
+#messages .sent {
+  background-color: #dcf8c6; /* Color for sent messages */
+  text-align: right; /* Align sent messages to the right */
+}
+
+#messages .received {
+  background-color: #eae5e6; /* Color for received messages */
+  text-align: left; /* Align received messages to the left */
+}
+
+.message-bubble {
+  max-width: 70%;
+  background-color: #dcf8c6;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.message-form {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.message-input {
+  flex: 1;
+  font-size: 16px;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.send-button {
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* Additional styles for room and username inputs */
+input[type="text"] {
+  width: calc(100% - 70px);
+}
